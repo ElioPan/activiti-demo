@@ -1,0 +1,18 @@
+server:
+  port: 9999
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.6.230:3306/activiti-test
+    username: root
+    password: root
+  #  autoconfigure:
+  #    exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  #  security:
+  #    user:
+  #      name: root
+  #      password: root
+  activiti:
+    history-level: full
+    db-history-used: true
+#    checkProcessDefinitions: false
