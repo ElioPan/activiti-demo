@@ -1,9 +1,12 @@
 package org.example.controller;
 
 
+import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricProcessInstanceQuery;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentQuery;
 import org.activiti.engine.repository.ProcessDefinition;
@@ -38,6 +41,8 @@ public class MyTestController {
     RuntimeService runtimeService;
     @Resource
     TaskService taskService;
+    @Resource
+    HistoryService historyService;
 
     /**
      * 根据bpmn图部署流程
@@ -166,5 +171,48 @@ public class MyTestController {
         return "流程" + id + "自定义的变量" + key + "的值为:" + variable;
     }
 
+    /**
+     * 根据任务id设置变量
+     */
+    @GetMapping("/task/set/{taskId}/{key}/{value}")
+    public String setVariable4Task(@PathVariable("taskId") String taskId,
+                                   @PathVariable("key") String key,
+                                   @PathVariable("value") String value) {
+        taskService.setVariable(taskId, key, value);
+        return "已为任务" + taskId + "设置变量" + key + ":" + value;
+    }
+
+    /**
+     * 获取根据任务id自定义的变量
+     */
+    @GetMapping("/task/get/{taskId}/{key}")
+    public String getVariable4Task(@PathVariable("taskId") String taskId,
+                                   @PathVariable("key") String key) {
+        Object variable = taskService.getVariable(taskId, key);
+        return "任务" + taskId + "自定义的变量" + key + "的值为:" + variable;
+    }
+
+    /**
+     * 判断流程实例结束
+     */
+    @GetMapping("/processInstance/status/{id}")
+    public String getProcessInstanceStatus(@PathVariable("id") String id) {
+        HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery().processInstanceId(id);
+        HistoricProcessInstance history = query.singleResult();
+        if (history != null && history.getEndTime() != null) {
+            return history.toString();
+        } else {
+            return "流程未结束";
+        }
+    }
+
+    /**
+     * 强制删除流程实例
+     */
+    @GetMapping("/processInstance/delete/{id}")
+    public String deleteProcessInstance(@PathVariable("id") String id) {
+        runtimeService.deleteProcessInstance(id, "删除原因......");
+        return "已删除流程" + id;
+    }
 
 }
