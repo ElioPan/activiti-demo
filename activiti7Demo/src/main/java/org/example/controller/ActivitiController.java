@@ -1,6 +1,8 @@
 package org.example.controller;
 
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -14,7 +16,6 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.runtime.ProcessInstanceQuery;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,18 +35,18 @@ import java.util.Map;
  * @Version 1.0
  */
 @RestController
-public class MyTestController {
+public class ActivitiController {
     @Resource
-    RepositoryService repositoryService;
+    RepositoryService repositoryService; // 部署类
     @Resource
-    RuntimeService runtimeService;
+    RuntimeService runtimeService;  // 运行类
     @Resource
-    TaskService taskService;
+    TaskService taskService;  // 任务类
     @Resource
-    HistoryService historyService;
+    HistoryService historyService;  // 历史记录类
 
     /**
-     * 根据bpmn图部署流程
+     * 根据bpm文件进行部署
      *
      * @param filename filename
      * @return String String
@@ -54,11 +55,11 @@ public class MyTestController {
     public String deploy(@PathVariable String filename) {
         Deployment deploy = null;
         try {
-            //写死了,从资源路径下的bpm读取文件流,文件名是动态的
-            FileInputStream fis = new FileInputStream("C:/workspace-test/测试/activitiTest/activiti7Demo/src/main/resources/bpm/" + filename + ".bpmn20.xml");
+            // module内文件相对路径，从module目录下开始
+            FileInputStream fis = new FileInputStream("src/main/resources/prodef/" + filename + ".bpmn20.xml");
             deploy = repositoryService.createDeployment()
-                    .name(filename)
-                    .addInputStream(filename + ".bpmn20.xml", fis)
+                    .name(filename)  // 流程的名称NAME_字段
+                    .addInputStream(filename + ".bpmn20.xml", fis)  // 流程定义中的名称RESOURCE_NAME_字段
                     .deploy();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -67,36 +68,40 @@ public class MyTestController {
     }
 
     /**
-     * 根据部署信息查询部署id
-     * 再根据部署id查询流程定义的id
+     * 根据部署名称查询部署信息列表
      * 部署名称是可以重复的
      *
      * @param name name
      * @return Object Object
      */
     @GetMapping("/deploy/query/{deployName}")
-    public Object queryDeploy(@PathVariable("deployName") String name) {
+    public String queryDeploy(@PathVariable("deployName") String name) {
         //根据名称获取流程部署id
         DeploymentQuery deployQuery = repositoryService.createDeploymentQuery();
         List<Deployment> deployments = deployQuery.deploymentName(name).list();
         if (deployments.size() == 0) {
-            return new Object();
+            return "没有查询到相关部署信息";
         }
-        //根据部署id获取流程定义id
-        List<String> processDefinitionIds = new ArrayList<>();
         for (Deployment deployment : deployments) {
-            //根据部署id获取流程定义id
-            List<ProcessDefinition> definitions = repositoryService.createProcessDefinitionQuery()
-                    .deploymentId(deployment.getId())
-                    .list();
-            if (definitions.size() > 0) {
-                //一个部署id可以对应多个流程定义id
-                for (ProcessDefinition definition : definitions) {
-                    processDefinitionIds.add(definition.getId());
-                }
-            }
+            String string = deployment.toString();
+            System.out.println(string);
         }
-        return processDefinitionIds;
+        return "直接toString打印结果，见上方---------------------------------";
+    }
+
+    /**
+     * 根据部署id查询对应的部署定义id
+     * 一条部署id可以对应多条部署定义，但建议一对一
+     */
+    public String getProcessDefineInfoByDeployId(String deployId){
+        List<ProcessDefinition> processDefs = repositoryService.createProcessDefinitionQuery()
+                .deploymentId(deployId)
+                .list();
+        for (ProcessDefinition processDef : processDefs) {
+            System.out.println(processDef.toString());
+        }
+        System.out.println("-----------------------------");
+        return "=================================";
     }
 
     /**
