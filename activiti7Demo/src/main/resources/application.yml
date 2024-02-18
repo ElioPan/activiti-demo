@@ -1,9 +1,10 @@
 server:
-  port: 9999
+  port: 8888
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.6.230:3306/activiti-test
+    url: jdbc:mysql://192.168.6.202:3306/bpm_demo
+#   如果第一次创建数据库，加这个参数nullCatalogMeansCurrent=true
     username: root
     password: root
   #  autoconfigure:
@@ -15,4 +16,4 @@ spring:
   activiti:
     history-level: full
     db-history-used: true
-#    checkProcessDefinitions: false
+    checkProcessDefinitions: false

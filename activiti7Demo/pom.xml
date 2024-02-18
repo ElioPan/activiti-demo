@@ -28,6 +28,11 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>2.0.32</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.activiti/activiti-spring-boot-starter -->
 		<dependency>
 			<groupId>org.activiti</groupId>
@@ -73,7 +78,6 @@
 			<artifactId>mybatis</artifactId>
 			<version>3.5.3</version>
 		</dependency>
-
 
 	</dependencies>
 
