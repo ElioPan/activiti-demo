@@ -10,10 +10,10 @@
     <endEvent id="sid-7ae96f7c-6b08-42f6-bbde-fa748a44ebbb" name="结束事件"/>
     <sequenceFlow id="sid-b1dd1a26-0daf-4654-b00e-1bf43ecd282b" sourceRef="sid-385c20e0-f2d3-4c1a-ade0-e3a9aab67fdd" targetRef="sid-1a75ab63-85d9-4dd3-89d1-a91c6bed0aeb"/>
     <sequenceFlow id="sid-c4835cea-326c-4fda-bb54-1661b037f7d0" sourceRef="sid-1a75ab63-85d9-4dd3-89d1-a91c6bed0aeb" targetRef="sid-308cff17-c728-4730-a7b7-043cffa82b36">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">${salary&gt;100 &amp;&amp; salary &lt;200}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-e5dcea58-323e-4928-9f14-cef86fa49070" sourceRef="sid-1a75ab63-85d9-4dd3-89d1-a91c6bed0aeb" targetRef="sid-85c65b45-e954-47b8-a028-6da7d0b16eac">
-      <conditionExpression xsi:type="tFormalExpression"/>
+      <conditionExpression xsi:type="tFormalExpression">${salary&gt;200}</conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="sid-cf14e2b6-b366-42b1-94fc-088823dd7c05" sourceRef="sid-308cff17-c728-4730-a7b7-043cffa82b36" targetRef="sid-7ae96f7c-6b08-42f6-bbde-fa748a44ebbb"/>
     <sequenceFlow id="sid-5a02ff5c-061b-447b-a9dd-f5bc277566e9" sourceRef="sid-85c65b45-e954-47b8-a028-6da7d0b16eac" targetRef="sid-7ae96f7c-6b08-42f6-bbde-fa748a44ebbb"/>

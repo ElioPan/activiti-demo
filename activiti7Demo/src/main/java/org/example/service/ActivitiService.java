@@ -190,7 +190,7 @@ public class ActivitiService {
         HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery().processInstanceId(id);
         HistoricProcessInstance history = query.singleResult();
         if (history != null && history.getEndTime() != null) {
-            System.out.println(history);
+            System.out.println("流程已结束："+history);
         } else {
             System.out.println("流程未结束");
         }
