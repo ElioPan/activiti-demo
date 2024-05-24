@@ -78,9 +78,9 @@ public class CandidateServiceTest2 extends TestCase {
     @Test
     public void testCompleteTaskById() {
         // 完成任务
-        candidateService.completeTaskById("f56d7421-cf9d-11ee-92d4-10f60a992eb5");
+        candidateService.completeTaskById("7f6b618b-cf9e-11ee-84c8-10f60a992eb5");
         // 查询待办任务
-        candidateService.queryActiveTask("f56b513d-cf9d-11ee-92d4-10f60a992eb5");
+        candidateService.queryActiveTask("7f698cc7-cf9e-11ee-84c8-10f60a992eb5");
     }
 
     /**
@@ -88,10 +88,11 @@ public class CandidateServiceTest2 extends TestCase {
      */
     @Test
     public void testSetVariable4ProcessInstance() {
+        String instanceId = "7f698cc7-cf9e-11ee-84c8-10f60a992eb5";
         Map<String,String> map = new HashMap<>();
-        map.put("salary","122");
-        candidateService.setVariable4ProcessInstance("f56b513d-cf9d-11ee-92d4-10f60a992eb5",map);
-        candidateService.getVariable4ProcessInstance("f56b513d-cf9d-11ee-92d4-10f60a992eb5","salary");
+        map.put("salary","88");
+        candidateService.setVariable4ProcessInstance(instanceId,map);
+        candidateService.getVariable4ProcessInstance(instanceId,"salary");
     }
 
     /**
@@ -114,7 +115,12 @@ public class CandidateServiceTest2 extends TestCase {
 
     @Test
     public void queryTasksByCandidate(){
-        candidateService.queryTasksByCandidate("zhangsan");
+        candidateService.queryTasksByCandidate("lisi");
+    }
+
+    @Test
+    public void queryTasksByCandidateList(){
+        candidateService.queryTasksByCandidateList("lisi");
     }
 }
 /*

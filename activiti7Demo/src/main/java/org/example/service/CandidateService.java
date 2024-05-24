@@ -219,4 +219,17 @@ public class CandidateService {
         }
     }
 
+    /**
+     * 根据候选用户们查询任务-候选人是预设的
+     */
+    public void queryTasksByCandidateList(String candidate){
+        List<Task> tasks = taskService.createTaskQuery()
+                .taskCandidateUser(candidate)
+                .list();
+        for (Task task : tasks) {
+            System.out.println(task);
+            System.out.println("=====================================");
+        }
+    }
+
 }

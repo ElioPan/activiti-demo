@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class ActivitiController {
         Deployment deploy = null;
         try {
             // module内文件相对路径，从module目录下开始
-            FileInputStream fis = new FileInputStream("src/main/resources/prodef/" + filename + ".bpmn20.xml");
+            FileInputStream fis = new FileInputStream("activiti7Demo/src/main/resources/prodef/" + filename + ".bpmn20.xml");
             deploy = repositoryService.createDeployment()
                     .name(filename)  // 流程的名称NAME_字段
                     .addInputStream(filename + ".bpmn20.xml", fis)  // 流程定义中的名称RESOURCE_NAME_字段
