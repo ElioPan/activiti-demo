@@ -31,6 +31,7 @@ import java.util.Map;
 
 /**
  * 工作流测试
+ *
  * @ClassName MyTestController
  * @Description
  * @Date 2023/08/14 13:02:00 星期一
@@ -49,7 +50,7 @@ public class ActivitiController {
     HistoryService historyService;  // 历史记录类
 
     /**
-     * 根据bpm文件进行部署
+     * 部署-指定xml文件名
      *
      * @return String String
      */
@@ -67,12 +68,12 @@ public class ActivitiController {
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }
-        log.info("部署成功,部署的id是->{}\n部署成功,部署的id是->{}", deploy.getId(), deploy.getName());
+        log.info("部署成功\n部署的id是-> {}\n部署的名称是-> {}", deploy.getId(), deploy.getName());
         return "ok";
     }
 
     /**
-     * 根据部署名称查询部署信息列表
+     * 部署名称查询部署List
      * 部署名称是可以重复的
      *
      * @return Object Object
@@ -86,15 +87,15 @@ public class ActivitiController {
         if (deployments.size() == 0) {
             return "没有查询到相关部署信息";
         }
+        log.info("部署列表:");
         for (Deployment deployment : deployments) {
-            String string = deployment.toString();
-            log.info("指定名称的部署->\n{}", string);
+            log.info(deployment.getId());
         }
         return "ok";
     }
 
     /**
-     * 根据部署id查询对应的部署定义id
+     * 部署id查询流程List
      * 一条部署id可以对应多条部署定义，但建议一对一
      */
     @PostMapping("/define/getByDeployId")
@@ -102,15 +103,15 @@ public class ActivitiController {
         List<ProcessDefinition> processDefs = repositoryService.createProcessDefinitionQuery()
                 .deploymentId(processParam.getDeployId())
                 .list();
+        log.info("流程定义列表:");
         for (ProcessDefinition processDef : processDefs) {
-            System.out.println(processDef.toString());
+            log.info(processDef.getId());
         }
-        System.out.println("-----------------------------");
-        return "=================================";
+        return "ok";
     }
 
     /**
-     * 根据流程定义id启动一个流程实例
+     * 流程定义id启动一个流程实例
      * 流程id (long) 和流程key(String 长度255)是唯一的
      * 都可以作为启动实例的入参
      *
@@ -123,40 +124,44 @@ public class ActivitiController {
         //根据流程定义id启动流程
         ProcessInstance proInstance = runtimeService.startProcessInstanceById(processParam.getProcessDefineId());
         //业务id->BusinessKey自己设置,但没有强制要求唯一,索引形式是normal
-        return "流程实例主键:" + proInstance.getId()
-                + "\n流程实例关联的业务id:" + proInstance.getBusinessKey();
+        log.info("流程实例主键-> {} \n 关联的业务id-> {}", proInstance.getId(), proInstance.getBusinessKey());
+        return "ok";
     }
 
 
     /**
-     * 根据流程实例ID查询当前活动的任务。
+     * 流程实例id查询当前活动任务List
      */
     @PostMapping("/task/getByInstanceId")
     public String queryActiveTask(@RequestBody ProcessParam processParam) {
         TaskQuery taskQuery = taskService.createTaskQuery().processInstanceId(processParam.getProcessInstanceId());
         List<Task> tasks = taskQuery.list();
-        System.out.println(tasks);
-        return tasks.toString();
+        log.info("任务列表:");
+        for (Task task : tasks) {
+            log.info(task.getId());
+        }
+        log.info(tasks.toString());
+        return "ok";
     }
 
     /**
-     * 根据任务id完成任务
+     * 任务id完成任务
      */
     @PostMapping("/task/completeByTaskId")
     public String completeTaskById(@RequestBody ProcessParam processParam) {
         taskService.complete(processParam.getTaskId());
-        return "任务完成";
+        return "ok";
     }
 
     /**
-     * 根据流程实例id,查询流程实例对象信息
+     * 流程实例id,查询流程实例对象信息
      */
     @PostMapping("/instance/getById")
-    public ProcessInstance getAllInfoOfProcessInstance(@RequestBody ProcessParam processParam) {
+    public String getAllInfoOfProcessInstance(@RequestBody ProcessParam processParam) {
         ProcessInstanceQuery query = runtimeService.createProcessInstanceQuery().processInstanceId(processParam.getProcessInstanceId());
         ProcessInstance processInstance = query.singleResult();
-        System.out.println(processInstance);
-        return processInstance;
+        log.info(processInstance.toString());
+        return "ok";
     }
 
     /**
@@ -220,7 +225,7 @@ public class ActivitiController {
         HistoricProcessInstanceQuery query = historyService.createHistoricProcessInstanceQuery().processInstanceId(processInstanceId);
         HistoricProcessInstance history = query.singleResult();
         if (history != null && history.getEndTime() != null) {
-            return history.toString();
+            return "流程已结束! 历史记录:"+ history.toString();
         } else {
             return "流程未结束";
         }
@@ -245,9 +250,9 @@ public class ActivitiController {
         List<Task> tasks = taskService.createTaskQuery()
                 .taskAssignee(assignee)
                 .list();
+        log.info("指定人任务列表:");
         for (Task task : tasks) {
-            log.info("任务->\n{}", task);
-            log.info("=====================================");
+            log.info(task.toString());
         }
         return "ok";
     }
@@ -261,9 +266,9 @@ public class ActivitiController {
         List<Task> tasks = taskService.createTaskQuery()
                 .taskCandidateUser(candidate)
                 .list();
+        log.info("候选人任务列表:");
         for (Task task : tasks) {
-            log.info("任务->\n{}", task);
-            log.info("=====================================");
+            log.info(task.toString());
         }
         return "ok";
     }
