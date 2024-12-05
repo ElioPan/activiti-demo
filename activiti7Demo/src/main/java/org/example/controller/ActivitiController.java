@@ -150,6 +150,7 @@ public class ActivitiController {
     @PostMapping("/task/completeByTaskId")
     public String completeTaskById(@RequestBody ProcessParam processParam) {
         taskService.complete(processParam.getTaskId());
+        log.info("任务完成");
         return "ok";
     }
 
